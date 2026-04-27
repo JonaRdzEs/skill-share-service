@@ -1,0 +1,109 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  id       String  @id @default(uuid())
+  username String  @db.VarChar(50)
+  email    String  @unique
+  password String?
+
+  bio      String? @db.VarChar(250)
+  location String?
+  photo    String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user_skills   UserSkills[]
+  host          Sessions[]   @relation("host")
+  guest         Sessions[]   @relation("guest")
+  review_author Reviews[]    @relation("author")
+  review_target Reviews[]    @relation("target")
+}
+
+model Skills {
+  id   Int    @id @default(autoincrement())
+  name String @unique @db.VarChar(50)
+
+  user_skills   UserSkills[]
+  sessionSkills Sessions[]
+}
+
+model UserSkills {
+  id          Int      @id @default(autoincrement())
+  description String?  @db.VarChar(200)
+  createdAt   DateTime @default(now())
+
+  user    Users  @relation(fields: [user_id], references: [id])
+  user_id String
+
+  skill    Skills @relation(fields: [skill_id], references: [id])
+  skill_id Int
+
+  @@unique([user_id, skill_id])
+}
+
+model Sessions {
+  id String @id @default(uuid())
+
+  status      SessionStatus @default(PENDING)
+  scheduledAt DateTime      @db.Timestamptz
+  duration    Int
+  location    String
+  message     String?       @db.VarChar(300)
+
+  host    Users  @relation("host", fields: [host_id], references: [id])
+  host_id String
+
+  guest    Users  @relation("guest", fields: [guest_id], references: [id])
+  guest_id String
+
+  skill    Skills @relation(fields: [skill_id], references: [id])
+  skill_id Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  reviews Reviews[]
+}
+
+model Reviews {
+  id Int @id @default(autoincrement())
+
+  rating  Int
+  comment String? @db.VarChar(500)
+
+  session    Sessions @relation(fields: [session_id], references: [id])
+  session_id String
+
+  author    Users  @relation("author", fields: [author_id], references: [id])
+  author_id String
+
+  target    Users  @relation("target", fields: [target_id], references: [id])
+  target_id String
+
+  createdAt DateTime @default(now())
+
+  @@unique([session_id, author_id])
+}
+
+enum SessionStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  COMPLETED
+  CANCELLED
+}
