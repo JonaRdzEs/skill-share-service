@@ -1,25 +1,38 @@
 import type { Response } from "express";
-import { UserService } from "../../services/User.service";
-import { CreateUserRequest, HTTPStatusCode, CreateUserResponse } from "../../types";
+import { AuthService } from "../../services/Auth.service";
+import {
+  CreateUserRequest,
+  HTTPStatusCode,
+  CreateUserResponse,
+  LoginUserRequest,
+} from "../../types";
 
 export class AuthController {
-  private userService;
+  private authService;
 
   constructor() {
-    this.userService = new UserService();
+    this.authService = new AuthService();
   }
 
-  signup = async (req: CreateUserRequest, res: Response<CreateUserResponse>) => {
-    const { name: username, email } = req.body;
-    const user = await this.userService.create({ username, email });
-    
+  signupWithCredentials = async (req: CreateUserRequest, res: Response<CreateUserResponse>) => {
+    const { name: username, ...rest } = req.body;
+    const user = await this.authService.signUpWithCredentials({
+      username,
+      ...rest,
+    });
+
     res.status(HTTPStatusCode.created).send({
       message: "User created successfully",
       user: {
         id: user.id,
-        name: username, 
-        email: email,
-      }
-    })
-  }
+        name: user.username,
+        email: user.email,
+      },
+    });
+  };
+
+  loginWithCredentials = async (req: LoginUserRequest, res: Response) => {
+    const data = await this.authService.loginWithCredentials(req.body);
+    res.status(HTTPStatusCode.success).send(data);
+  };
 }

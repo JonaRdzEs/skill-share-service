@@ -1,7 +1,6 @@
 import z from "zod";
 
-export const createUserSchema = z.object({
-  name: z.string().min(3, "Name should have at least 3 characters").max(50, "Name should have less than 50 characters"),
+export const loginWithCredentialsSchema = z.object({
   email: z.email("Invalid email"),
   password: z
     .string()
