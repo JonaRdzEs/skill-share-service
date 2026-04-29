@@ -8,7 +8,6 @@ export class AppRoutes {
 
   get routes() {
 
-    this.router.get("/", (req, res) => res.send("Hello world!!!"));
     this.router.use("/auth", (new AuthRoutes()).routes);
     this.router.use("/users",(new UserRoutes()).routes);
     
