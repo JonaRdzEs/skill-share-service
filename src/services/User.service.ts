@@ -1,6 +1,6 @@
 import { HTTPError } from "../helpers/HTTPError";
 import { UserModel } from "../models/users/User.model";
-import { HTTPErrorCode, HTTPStatusCode } from "../types";
+import { CreateUserData, HTTPErrorCode, HTTPStatusCode } from "../types";
 
 export class UserService {
   private userModel;
@@ -9,9 +9,7 @@ export class UserService {
     this.userModel = new UserModel();
   }
 
-  emailExists = async (email: string) => {
-    return this.userModel.exists("email", email);
-  } 
+  emailExists = async (email: string) => this.userModel.exists("email", email);
 
   findByEmail = async (email: string) => {
     const user = await this.userModel.findOneByEmail(email);
@@ -25,11 +23,7 @@ export class UserService {
     return user;
   };
 
-  create = async (data: {
-    username: string;
-    email: string;
-    password?: string;
-  }) => {
+  create = async (data: CreateUserData) => {
     return this.userModel.create(data);
   };
 }

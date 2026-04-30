@@ -1,10 +1,11 @@
 import type { Response } from "express";
 import { AuthService } from "../../services/Auth.service";
 import {
-  CreateUserRequest,
+  SignUpRequest,
   HTTPStatusCode,
   CreateUserResponse,
-  LoginUserRequest,
+  LoginRequest,
+  LoginResponse,
 } from "../../types";
 
 export class AuthController {
@@ -14,12 +15,8 @@ export class AuthController {
     this.authService = new AuthService();
   }
 
-  signupWithCredentials = async (req: CreateUserRequest, res: Response<CreateUserResponse>) => {
-    const { name: username, ...rest } = req.body;
-    const user = await this.authService.signUpWithCredentials({
-      username,
-      ...rest,
-    });
+  signupWithCredentials = async (req: SignUpRequest, res: Response<CreateUserResponse>) => {
+    const user = await this.authService.signUpWithCredentials(req.body);
 
     res.status(HTTPStatusCode.created).send({
       message: "User created successfully",
@@ -31,8 +28,18 @@ export class AuthController {
     });
   };
 
-  loginWithCredentials = async (req: LoginUserRequest, res: Response) => {
-    const data = await this.authService.loginWithCredentials(req.body);
-    res.status(HTTPStatusCode.success).send(data);
+  loginWithCredentials = async (req: LoginRequest, res: Response<LoginResponse>) => {
+    const { user, token } = await this.authService.loginWithCredentials(req.body);
+    res.status(HTTPStatusCode.success).send({
+      user: {
+        id: user.id,
+        name: user.username,
+        email: user.email,
+        bio: user.bio,
+        location: user.location,
+        photoUrl: user.photo,
+      },
+      token,
+    });
   };
 }

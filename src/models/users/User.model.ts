@@ -1,8 +1,9 @@
 import { prisma } from "../../lib/prisma";
+import { CreateUserData } from "../../types";
 
 export class UserModel {
-  async exists (key: string, value: string) {
-    const user = await prisma.users.findFirst({ where: { [key]: value }});
+  async exists(key: string, value: string) {
+    const user = await prisma.users.findFirst({ where: { [key]: value } });
     return !!user;
   }
 
@@ -11,15 +12,10 @@ export class UserModel {
   }
 
   findById(id: string) {
-    return prisma.users.findUnique({ where: { id } })
+    return prisma.users.findUnique({ where: { id } });
   }
 
-  create(data: { username: string; email: string; password?: string }) {
-    return prisma.users.create({
-      data: {
-        username: data.username,
-        email: data.email,
-      },
-    });
+  create(data: CreateUserData) {
+    return prisma.users.create({ data });
   }
 }

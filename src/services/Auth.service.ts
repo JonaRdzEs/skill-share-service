@@ -2,12 +2,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { UserService } from "./User.service";
 import { HTTPError } from "../helpers/HTTPError";
-import {
-  HTTPErrorCode,
-  HTTPStatusCode,
-  LoginCredentials,
-  SignUpData,
-} from "../types";
+import { HTTPErrorCode, HTTPStatusCode, LoginData, SignUpData } from "../types";
 import { envs } from "../constants";
 
 export class AuthService {
@@ -44,7 +39,7 @@ export class AuthService {
     return this.userService.create({ ...rest, password: encryptedPass });
   };
 
-  loginWithCredentials = async (data: LoginCredentials) => {
+  loginWithCredentials = async (data: LoginData) => {
     const user = await this.userService.findByEmail(data.email);
     // TODO: check logic
     const passwordsMatched = await bcrypt.compare(
@@ -54,9 +49,9 @@ export class AuthService {
 
     if (!passwordsMatched)
       throw new HTTPError(
-        HTTPStatusCode.forbidden,
+        HTTPStatusCode.unauthorized,
         "Invalid credentials",
-        HTTPErrorCode.forbidden
+        HTTPErrorCode.unauthorized
       );
 
     const jwtPayload = {
@@ -67,14 +62,7 @@ export class AuthService {
     const token = this.generateJWT(jwtPayload);
 
     return {
-      user: {
-        id: user.id,
-        name: user.username,
-        email: user.email,
-        bio: user.bio,
-        location: user.location,
-        photoUrl: user.photo,
-      },
+      user,
       token,
     };
   };

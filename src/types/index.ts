@@ -1,7 +1,9 @@
-export * from "./auth/credentials";
+export * from "./auth";
 
-export * from "./users/requestBodies";
-export * from "./users/responses";
+export * from "./users";
 
 export * from "./HTTPStatusCode";
 export * from "./ErrorCode";
+
+export * from "./requests";
+export * from "./responses";
