@@ -27,6 +27,9 @@ model Users {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  refreshToken String?
+  token_expire_date DateTime? @db.Timestamptz()
+
   user_skills   UserSkills[]
   host          Sessions[]   @relation("host")
   guest         Sessions[]   @relation("guest")

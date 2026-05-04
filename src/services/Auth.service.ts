@@ -1,27 +1,38 @@
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload, SignOptions } from "jsonwebtoken";
+import { AuthModel } from "../models/auth/Auth.model";
 import { UserService } from "./User.service";
 import { HTTPError } from "../helpers/HTTPError";
 import { HTTPErrorCode, HTTPStatusCode, LoginData, SignUpData } from "../types";
-import { envs } from "../constants";
+import { envs, JWT_EXPIRE_TIME, REFRESH_TOKEN_EXPIRE_TIME } from "../constants";
 
 export class AuthService {
-  private saltRounds;
   private userService;
+  private authModel;
+
+  private saltRounds;
   private jwtKey;
+  private jwtExpireTime;
+  private refreshTokenSecret;
+  private refreshTokenExpireTime;
 
   constructor() {
-    this.saltRounds = 12;
     this.userService = new UserService();
+    this.authModel = new AuthModel();
+
+    this.saltRounds = 12;
     this.jwtKey = envs.jwtSecret;
+    this.jwtExpireTime = JWT_EXPIRE_TIME;
+    this.refreshTokenSecret = envs.refreshTokenSecret,
+    this.refreshTokenExpireTime = REFRESH_TOKEN_EXPIRE_TIME;
   }
 
   encryptPassword = (password: string) =>
     bcrypt.hash(password, this.saltRounds);
 
-  generateJWT = (payload: string | Buffer | object) => {
-    return jwt.sign(payload, this.jwtKey, { expiresIn: "1hr" });
-  };
+  generateJWT = (payload: JwtPayload) => jwt.sign(payload, this.jwtKey, { expiresIn: this.jwtExpireTime } as SignOptions );
+
+  generateRefreshToken = (payload: JwtPayload) => jwt.sign(payload, this.refreshTokenSecret, { expiresIn: this.refreshTokenExpireTime } as SignOptions);
 
   signUpWithCredentials = async (data: SignUpData) => {
     const { password, ...rest } = data;
@@ -41,7 +52,7 @@ export class AuthService {
 
   loginWithCredentials = async (data: LoginData) => {
     const user = await this.userService.findByEmail(data.email);
-    // TODO: check logic
+
     const passwordsMatched = await bcrypt.compare(
       data.password,
       user.password!
@@ -60,10 +71,14 @@ export class AuthService {
     };
 
     const token = this.generateJWT(jwtPayload);
+    const refreshToken = this.generateRefreshToken(jwtPayload);
 
+    await this.authModel.saveRefreshToken(user.id, refreshToken);
+    
     return {
       user,
-      token,
+      accessToken: token,
+      refreshToken,
     };
   };
 }

@@ -29,7 +29,7 @@ export class AuthController {
   };
 
   loginWithCredentials = async (req: LoginRequest, res: Response<LoginResponse>) => {
-    const { user, token } = await this.authService.loginWithCredentials(req.body);
+    const { user, ...rest } = await this.authService.loginWithCredentials(req.body);
     res.status(HTTPStatusCode.success).send({
       user: {
         id: user.id,
@@ -39,7 +39,7 @@ export class AuthController {
         location: user.location,
         photoUrl: user.photo,
       },
-      token,
+      ...rest,
     });
   };
 }
