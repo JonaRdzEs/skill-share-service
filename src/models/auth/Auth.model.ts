@@ -12,4 +12,17 @@ export class AuthModel {
     const result = await prisma.$queryRaw<TokenExpiredResult[]>`SELECT token_expire_date < NOW() AS is_expired FROM "public"."Users" WHERE "refreshToken" = ${token} AND id = ${userId};`;
     return result[0]?.is_expired ?? false;
   }
+
+  deleteRefreshToken(userId: string, token: string) {
+    return prisma.users.update({
+      data: {
+        refreshToken: null,
+        token_expire_date: null,
+      },
+      where: {
+        id: userId,
+        refreshToken: token,
+      }
+    })
+  }
 }

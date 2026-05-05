@@ -6,3 +6,8 @@ export interface LoginData {
 export interface SignUpData extends LoginData {
   username: string;
 }
+
+export interface JwtPayload {
+  userId: string;
+  email: string;
+}

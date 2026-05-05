@@ -10,4 +10,19 @@ export interface LoginRequest extends Request {
   body: LoginData;
 }
 
+export interface AuthenticatedRequest extends Request {
+  user: {
+    id: string;
+    email: string;
+  };
+}
+
+export interface RefreshTokenRequest extends Request {
+  user: {
+    id: string;
+    email: string;
+    refreshToken: string;
+  };
+}
+
 /* Users */
