@@ -8,6 +8,7 @@ import {
   LoginResponse,
   RefreshTokenResponse,
   RefreshTokenRequest,
+  AuthenticatedRequest,
 } from "../../types";
 import { envs } from "../../constants";
 
@@ -75,4 +76,14 @@ export class AuthController {
       ...tokens,
     });
   };
+
+  logout = async (req: Request, res: Response<{ message: string}>) => {
+    const userId = (req as AuthenticatedRequest).user.id;
+    await this.authService.logout(userId);
+    res.clearCookie("refresh-token", {
+      httpOnly: envs.environment === "production",
+      secure: envs.environment === "production",
+    });
+    res.status(HTTPStatusCode.success).send({ message: "Logged out successfully "});
+  }
 }

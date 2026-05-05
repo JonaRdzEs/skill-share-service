@@ -13,7 +13,7 @@ export class AuthModel {
     return result[0]?.is_expired ?? false;
   }
 
-  deleteRefreshToken(userId: string, token: string) {
+  deleteRefreshToken(userId: string, token?: string) {
     return prisma.users.update({
       data: {
         refreshToken: null,
@@ -21,7 +21,7 @@ export class AuthModel {
       },
       where: {
         id: userId,
-        refreshToken: token,
+        ...(token && { refreshToken: token }),
       }
     })
   }

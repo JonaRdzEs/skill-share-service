@@ -136,4 +136,8 @@ export class AuthService {
 
     return { accessToken: newAccessToken, refreshToken };
   };
+
+  logout = (userId: string) => {
+    return this.authModel.deleteRefreshToken(userId);
+  }
 }
