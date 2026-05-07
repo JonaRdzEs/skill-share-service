@@ -1,5 +1,6 @@
 import type { Request } from "express";
 import type { LoginData, SignUpData } from "../auth";
+import { UpdateUserData } from "../users";
 
 /* Auth */
 export interface SignUpRequest extends Request {
@@ -26,3 +27,12 @@ export interface RefreshTokenRequest extends Request {
 }
 
 /* Users */
+export interface GetUserRequest extends AuthenticatedRequest {
+  params: {
+    id: string;
+  },
+}
+
+export interface UpdateUserRequest extends AuthenticatedRequest {
+  body: UpdateUserData
+}

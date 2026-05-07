@@ -1,5 +1,5 @@
 import { prisma } from "../../lib/prisma";
-import { CreateUserData } from "../../types";
+import { CreateUserData, UpdateUserData } from "../../types";
 
 export class UserModel {
   async exists(key: string, value: string) {
@@ -18,4 +18,13 @@ export class UserModel {
   create(data: CreateUserData) {
     return prisma.users.create({ data });
   }
+
+  update(id: string, data: UpdateUserData) {
+    return prisma.users.update({
+      data,
+      where: {
+        id,
+      }
+    });
+  } 
 }

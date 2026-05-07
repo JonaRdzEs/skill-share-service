@@ -6,3 +6,10 @@ export interface CreateUserData {
   location?: string | null;
   photo?: string | null;
 }
+
+export interface UpdateUserData {
+  username?: string;
+  bio?: string;
+  location: string;
+  photo?: string;
+}
