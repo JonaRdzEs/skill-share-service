@@ -4,7 +4,7 @@ import { HTTPError } from "../helpers/HTTPError";
 import { HTTPErrorCode, HTTPStatusCode, AuthenticatedRequest } from "../types";
 
 export function validateJwt(req: Request, res: Response, next: NextFunction) {
-  const jwtToken = req.headers.authorization;
+  const jwtToken = req.cookies["access_token"];
 
   if (!jwtToken) {
     next(

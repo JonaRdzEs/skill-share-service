@@ -8,16 +8,19 @@ import { globalErrorHandler } from "./middlewares/globalErrorHandler";
 const app: Application = express();
 const { port } = envs;
 const appRoutes = new AppRoutes();
-
-app.use(express.json());
-app.use(cookieParser());
-app.use(cors({
+const corsOptions = {
   origin: ["http://localhost:3000"],
   methods: ["GET", "POST", "PUT"],
-  allowedHeaders: ["Content-Type"]
-}))
+  allowedHeaders: ["Content-Type"],
+  credentials: true,
+}
+
+app.use(express.json());
+app.use(cors(corsOptions))
+app.use(cookieParser());
 
 app.use("/", appRoutes.routes);
+app.options('/*wildcard', cors(corsOptions)); // Enable CORS for preflight requests
 
 // The error handler MUST be the last middleware defined
 app.use(globalErrorHandler);

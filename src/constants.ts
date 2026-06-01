@@ -1,6 +1,6 @@
 import "dotenv/config";
 
-const JWT_EXPIRE_TIME = "2h";
+const JWT_EXPIRE_TIME = "20min";
 const REFRESH_TOKEN_EXPIRE_TIME = "10d";
 
 const envs  = {

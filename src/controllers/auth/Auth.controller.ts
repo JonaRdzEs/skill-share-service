@@ -10,13 +10,25 @@ import {
   RefreshTokenRequest,
   AuthenticatedRequest,
 } from "../../types";
+import { setCookie } from "../../utils/setCookie";
 import { envs } from "../../constants";
 
 export class AuthController {
   private authService;
+  private accessOptions;
+  private refreshOptions;
 
   constructor() {
     this.authService = new AuthService();
+    this.accessOptions = {
+      name: "access_token",
+      expirationTime: 20 * 60 * 1000, // 20 minutes
+    };
+
+    this.refreshOptions = {
+      name: "refresh_token",
+      expirationTime: 10 * 60 * 60 * 60 * 1000, // 10 days
+    };
   }
 
   signupWithCredentials = async (
@@ -41,10 +53,15 @@ export class AuthController {
   ) => {
     const { user, accessToken, refreshToken } =
       await this.authService.loginWithCredentials(req.body);
-    res.cookie("refresh-token", refreshToken, {
-      httpOnly: envs.environment === "production",
-      secure: envs.environment === "production",
-      maxAge: 10 * 24 * 60 * 60 * 1000, // 10 days
+    setCookie({
+      response: res,
+      value: refreshToken,
+      ...this.refreshOptions,
+    });
+    setCookie({
+      response: res,
+      value: accessToken,
+      ...this.accessOptions,
     });
     res.status(HTTPStatusCode.success).send({
       user: {
@@ -55,8 +72,6 @@ export class AuthController {
         location: user.location,
         photoUrl: user.photo,
       },
-      accessToken,
-      refreshToken,
     });
   };
 
@@ -72,18 +87,33 @@ export class AuthController {
       refreshToken
     );
 
-    res.status(HTTPStatusCode.success).send({
-      ...tokens,
+    setCookie({
+      response: res,
+      value: tokens.refreshToken,
+      ...this.refreshOptions,
     });
+    setCookie({
+      response: res,
+      value: tokens.accessToken,
+      ...this.accessOptions,
+    });
+
+    res.status(204);
   };
 
-  logout = async (req: Request, res: Response<{ message: string}>) => {
+  logout = async (req: Request, res: Response<{ message: string }>) => {
     const userId = (req as AuthenticatedRequest).user.id;
     await this.authService.logout(userId);
-    res.clearCookie("refresh-token", {
-      httpOnly: envs.environment === "production",
+    res.clearCookie(this.accessOptions.name, {
+      httpOnly: true,
       secure: envs.environment === "production",
     });
-    res.status(HTTPStatusCode.success).send({ message: "Logged out successfully "});
-  }
+    res.clearCookie(this.refreshOptions.name, {
+      httpOnly: true,
+      secure: envs.environment === "production",
+    });
+    res
+      .status(HTTPStatusCode.success)
+      .send({ message: "Logged out successfully " });
+  };
 }

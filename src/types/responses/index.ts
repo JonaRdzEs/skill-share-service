@@ -16,8 +16,6 @@ export interface LoginResponse {
     location: string | null;
     photoUrl: string | null;
   };
-  accessToken: string;
-  refreshToken: string;
 }
 
 export interface RefreshTokenResponse {
