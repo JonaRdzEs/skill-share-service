@@ -29,7 +29,7 @@ export class UserService {
     if (!user)
       throw new HTTPError(
         HTTPStatusCode.notFound,
-        "user with provided email does not exist",
+        "The provided email is not registered",
         HTTPErrorCode.notFound
       );
 
