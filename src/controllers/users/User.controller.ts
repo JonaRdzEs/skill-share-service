@@ -23,10 +23,10 @@ export class UserController {
       user: {
         id,
         email,
-        username,
+        name: username,
         bio,
         location,
-        photo,
+        photoUrl: photo,
         createdAt,
         updatedAt,
       },

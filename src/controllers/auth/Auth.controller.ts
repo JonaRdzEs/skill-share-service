@@ -35,14 +35,18 @@ export class AuthController {
     req: SignUpRequest,
     res: Response<CreateUserResponse>
   ) => {
-    const user = await this.authService.signUpWithCredentials(req.body);
+    const {
+      id,
+      username: name,
+      email,
+    } = await this.authService.signUpWithCredentials(req.body);
 
     res.status(HTTPStatusCode.created).send({
       message: "User created successfully",
       user: {
-        id: user.id,
-        name: user.username,
-        email: user.email,
+        id,
+        name,
+        email,
       },
     });
   };
