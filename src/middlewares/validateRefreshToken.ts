@@ -4,7 +4,7 @@ import { HTTPError } from "../helpers/HTTPError";
 import { HTTPErrorCode, HTTPStatusCode, RefreshTokenRequest } from "../types";
 
 export function validateRefreshToken(req: Request, res: Response, next: NextFunction) {
-  const refreshToken: string = req.cookies["refresh-token"];
+  const refreshToken: string = req.cookies["refresh_token"];
 
   if (!refreshToken) {
     next(

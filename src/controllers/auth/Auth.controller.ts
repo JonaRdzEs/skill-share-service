@@ -102,7 +102,7 @@ export class AuthController {
       ...this.accessOptions,
     });
 
-    res.status(204);
+    res.status(204).send();
   };
 
   logout = async (req: Request, res: Response<{ message: string }>) => {
