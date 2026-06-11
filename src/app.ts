@@ -8,8 +8,9 @@ import { globalErrorHandler } from "./middlewares/globalErrorHandler";
 const app: Application = express();
 const { port } = envs;
 const appRoutes = new AppRoutes();
+
 const corsOptions = {
-  origin: ["http://localhost:3000"],
+  origin: envs.environment === "development" ? ["http://localhost:3000"] : ["https://skill-share-murex.vercel.app"],
   methods: ["GET", "POST", "PUT"],
   allowedHeaders: ["Content-Type"],
   credentials: true,
