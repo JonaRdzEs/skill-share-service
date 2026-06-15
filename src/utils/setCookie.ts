@@ -17,7 +17,9 @@ export function setCookie({
   response.cookie(name, value, {
     httpOnly: true,
     secure: envs.environment === "production",
-    sameSite: "lax",
+    sameSite: envs.environment === "production"
+      ? "none"
+      : "lax",
     maxAge: expirationTime,
   });
 }
