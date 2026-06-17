@@ -15,4 +15,14 @@ export class SkillModel {
       },
     });
   }
+
+  findManyById(ids: number[]) {
+    return prisma.skills.findMany({
+      where: {
+        id: {
+          in: ids,
+        },
+      },
+    });
+  }
 }

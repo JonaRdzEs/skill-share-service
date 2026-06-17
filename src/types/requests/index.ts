@@ -37,8 +37,14 @@ export interface UpdateUserRequest extends AuthenticatedRequest {
   body: UpdateUserData
 }
 
+export interface AddUserSkillsRequest extends AuthenticatedRequest {
+  body: {
+    skillIds: number[],
+  }
+}
+
 /* Skills */
-export interface CreateSkillsRequest {
+export interface CreateSkillsRequest extends AuthenticatedRequest {
   body: {
     skills: string[]
   }
