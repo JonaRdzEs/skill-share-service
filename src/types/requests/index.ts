@@ -36,3 +36,10 @@ export interface GetUserRequest extends AuthenticatedRequest {
 export interface UpdateUserRequest extends AuthenticatedRequest {
   body: UpdateUserData
 }
+
+/* Skills */
+export interface CreateSkillsRequest {
+  body: {
+    skills: string[]
+  }
+}
