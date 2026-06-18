@@ -5,6 +5,7 @@ import { bodyValidator } from "../../middlewares/validators/bodyValidator";
 import { updateUserSchema } from "../../schemas/users/updateUser.schema";
 import { UserSkillsController } from "../../controllers/users/UserSkills.controller";
 import { addUserSkillsSchema } from "../../schemas/users/addUserSkills.schema";
+import { deleteUserSkillsSchema } from "../../schemas/users/deleteUserSkills.schema";
 
 export class UserRoutes {
   private router: Router = express.Router();
@@ -16,7 +17,8 @@ export class UserRoutes {
     this.router.get("/:id", validateJwt, userController.getUser);
     this.router.put("/me", validateJwt, bodyValidator(updateUserSchema), userController.update);
 
-    this.router.post("/me/skills", validateJwt, bodyValidator(addUserSkillsSchema), userSkillsController.add)
+    this.router.post("/me/skills", validateJwt, bodyValidator(addUserSkillsSchema), userSkillsController.add);
+    this.router.delete("/me/skills", validateJwt, bodyValidator(deleteUserSkillsSchema), userSkillsController.delete);
     
     return this.router;
   }

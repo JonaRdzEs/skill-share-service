@@ -43,6 +43,12 @@ export interface AddUserSkillsRequest extends AuthenticatedRequest {
   }
 }
 
+export interface DeleteUserSkillsRequest extends AuthenticatedRequest {
+  body: {
+    userSkillIds: number[],
+  }
+}
+
 /* Skills */
 export interface CreateSkillsRequest extends AuthenticatedRequest {
   body: {

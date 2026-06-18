@@ -20,4 +20,17 @@ export class UserSkillsModel {
       }
     });
   }
+
+  delete(userId: string, userSkillIds: number[]) {
+    return prisma.userSkills.deleteMany({
+      where: {
+        user_id: userId,
+        AND: {
+          id: {
+            in: userSkillIds,
+          }
+        }
+      }
+    });
+  }
 }
