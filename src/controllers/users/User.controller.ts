@@ -1,5 +1,9 @@
 import type { Request, Response } from "express";
-import { AuthenticatedRequest, GetUserRequest, HTTPStatusCode } from "../../types";
+import {
+  AuthenticatedRequest,
+  GetUserRequest,
+  HTTPStatusCode,
+} from "../../types";
 import { UserService } from "../../services/User.service";
 
 export class UserController {
@@ -35,7 +39,12 @@ export class UserController {
 
   update = async (req: Request, res: Response) => {
     const { id } = (req as AuthenticatedRequest).user;
-    const user = await this.userService.update(id, req.body);
-    res.status(HTTPStatusCode.success).send({ user });
+    const { photo, ...rest } = await this.userService.update(id, req.body);
+    res.status(HTTPStatusCode.success).send({
+      user: {
+        ...rest,
+        photoUrl: photo,
+      },
+    });
   };
 }
