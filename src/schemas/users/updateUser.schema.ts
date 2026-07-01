@@ -5,4 +5,5 @@ export const updateUserSchema = z.object({
   bio: z.string().max(250, "Bio must have less that 250 characters").optional().nullable(),
   location: z.string().optional().nullable(),
   photo: z.string().optional(),
+  role: z.enum(["student", "teacher"]).optional()
 });

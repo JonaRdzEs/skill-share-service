@@ -20,7 +20,7 @@ export class UserController {
         ? typedRequest.user.id
         : typedRequest.params.id;
 
-    const { id, email, username, bio, createdAt, updatedAt, location, photo } =
+    const { id, email, username, bio, createdAt, updatedAt, location, photo, role } =
       await this.userService.findById(userId);
 
     res.status(HTTPStatusCode.success).send({
@@ -30,6 +30,7 @@ export class UserController {
         name: username,
         bio,
         location,
+        role,
         photoUrl: photo,
         createdAt,
         updatedAt,

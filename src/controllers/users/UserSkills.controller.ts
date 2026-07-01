@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { AddUserSkillsRequest, DeleteUserSkillsRequest, HTTPStatusCode } from "../../types";
+import { AddUserSkillsRequest, DeleteUserSkillsRequest, HTTPStatusCode, GetUserSkillsRequest } from "../../types";
 import { UserSkillsService } from "../../services/UserSkills.service";
 
 export class UserSkillsController {
@@ -7,6 +7,20 @@ export class UserSkillsController {
 
   constructor() {
     this.userSkillsService = new UserSkillsService();
+  }
+
+  get = async (req: Request, res: Response) => {
+    const { params, user } = req as GetUserSkillsRequest;
+    const userId = params.id.toLowerCase() === "me" ? user.id : params.id;
+
+    const userSkills = await this.userSkillsService.getByUser(userId);
+
+    res.status(HTTPStatusCode.success).send({
+      user: {
+        id: userId,
+        skills: userSkills,
+      }
+    });
   }
 
   add = async (req: Request, res: Response) => {

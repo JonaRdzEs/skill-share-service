@@ -2,6 +2,11 @@ import type { Request } from "express";
 import type { LoginData, SignUpData } from "../auth";
 import { UpdateUserData } from "../users";
 
+/* General */
+export interface RequestWithParams<T> {
+  params: T
+} 
+
 /* Auth */
 export interface SignUpRequest extends Request {
   body: SignUpData;
@@ -26,12 +31,12 @@ export interface RefreshTokenRequest extends Request {
   };
 }
 
+export type AuthenticatedRequestWithParams<T> = RequestWithParams<T> & AuthenticatedRequest;
+
 /* Users */
-export interface GetUserRequest extends AuthenticatedRequest {
-  params: {
-    id: string;
-  },
-}
+
+export type GetUserRequest = AuthenticatedRequestWithParams<{ id: string }>;
+export type GetUserSkillsRequest = AuthenticatedRequestWithParams<{ id: string }>
 
 export interface UpdateUserRequest extends AuthenticatedRequest {
   body: UpdateUserData

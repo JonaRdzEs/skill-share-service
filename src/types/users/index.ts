@@ -12,4 +12,5 @@ export interface UpdateUserData {
   bio?: string;
   location: string;
   photo?: string;
+  role?: "student" | "teacher",
 }

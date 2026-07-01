@@ -1,6 +1,14 @@
 import { prisma } from "../../lib/prisma";
 
 export class UserSkillsModel {
+  getByUserId(userId: string) {
+    return prisma.userSkills.findMany({
+      where: {
+        user_id: userId,
+      }
+    });
+  }
+
   create(userId: string, skillIds: number[]) {
     
     const formattedData = skillIds.map((skillId) => ({

@@ -12,6 +12,14 @@ export class UserSkillsService {
     this.skillModel = new SkillModel();
   }
 
+  getByUser = async (userId: string) => {
+    const userSkills = await this.userSkillsModel.getByUserId(userId);
+
+    return userSkills.map(({ user_id, ...rest }) => ({
+      ...rest
+     }));
+  };
+
   add = async (userId: string, skillIds: number[]) => {
     const existingSkillIds = await this.skillModel.findManyById(skillIds);
 

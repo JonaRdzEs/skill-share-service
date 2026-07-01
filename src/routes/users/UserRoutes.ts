@@ -17,6 +17,7 @@ export class UserRoutes {
     this.router.get("/:id", validateJwt, userController.getUser);
     this.router.put("/me", validateJwt, bodyValidator(updateUserSchema), userController.update);
 
+    this.router.get("/:id/skills", validateJwt, userSkillsController.get);
     this.router.post("/me/skills", validateJwt, bodyValidator(addUserSkillsSchema), userSkillsController.add);
     this.router.delete("/me/skills", validateJwt, bodyValidator(deleteUserSkillsSchema), userSkillsController.delete);
     
