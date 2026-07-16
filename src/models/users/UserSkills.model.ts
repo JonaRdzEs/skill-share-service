@@ -5,6 +5,13 @@ export class UserSkillsModel {
     return prisma.userSkills.findMany({
       where: {
         user_id: userId,
+      }, 
+      include: {
+        skill: {
+          select: {
+            name: true,
+          }
+        }
       }
     });
   }

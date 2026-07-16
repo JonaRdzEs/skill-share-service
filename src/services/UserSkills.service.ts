@@ -15,8 +15,12 @@ export class UserSkillsService {
   getByUser = async (userId: string) => {
     const userSkills = await this.userSkillsModel.getByUserId(userId);
 
-    return userSkills.map(({ user_id, ...rest }) => ({
-      ...rest
+    return userSkills.map(({ user_id, skill, skill_id, ...rest }) => ({
+      ...rest,
+      skill: {
+        id: skill_id,
+        name: skill.name,
+      }
      }));
   };
 
@@ -27,10 +31,11 @@ export class UserSkillsService {
 
     const ids = existingSkillIds.map((s) => s.id);
     const addedSkills = await this.userSkillsModel.create(userId, ids);
-    return addedSkills.map(({ id, description, skill }) => ({
+    return addedSkills.map(({ id, description, skill, createdAt }) => ({
       userSkillId: id,
       description,
       name: skill.name,
+      createdAt,
     }));
   };
 

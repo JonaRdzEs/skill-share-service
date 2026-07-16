@@ -10,6 +10,7 @@ export class SkillRoutes {
   get routes() {
     const skillsController = new SkillsController();
 
+    this.router.get("/search", validateJwt, skillsController.search);
     this.router.post("/", validateJwt, bodyValidator(createSkillsSchema), skillsController.createMany);
 
     return this.router;

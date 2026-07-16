@@ -7,6 +7,10 @@ export class SkillService {
     this.skillModel = new SkillModel();
   }
 
+  search = (skillName: string) => {
+    return this.skillModel.search(skillName);
+  }
+
   create = async (skills: string[]) => {
     const existingSkills = await this.skillModel.findManyByName(skills);
 

@@ -4,8 +4,8 @@ import { UpdateUserData } from "../users";
 
 /* General */
 export interface RequestWithParams<T> {
-  params: T
-} 
+  params: T;
+}
 
 /* Auth */
 export interface SignUpRequest extends Request {
@@ -31,32 +31,43 @@ export interface RefreshTokenRequest extends Request {
   };
 }
 
-export type AuthenticatedRequestWithParams<T> = RequestWithParams<T> & AuthenticatedRequest;
+export type AuthenticatedRequestWithParams<T> = RequestWithParams<T> &
+  AuthenticatedRequest;
 
 /* Users */
 
 export type GetUserRequest = AuthenticatedRequestWithParams<{ id: string }>;
-export type GetUserSkillsRequest = AuthenticatedRequestWithParams<{ id: string }>
+export type GetUserSkillsRequest = AuthenticatedRequestWithParams<{
+  id: string;
+}>;
 
 export interface UpdateUserRequest extends AuthenticatedRequest {
-  body: UpdateUserData
+  body: UpdateUserData;
 }
 
 export interface AddUserSkillsRequest extends AuthenticatedRequest {
   body: {
-    skillIds: number[],
-  }
+    skillIds: number[];
+  };
 }
 
 export interface DeleteUserSkillsRequest extends AuthenticatedRequest {
   body: {
-    userSkillIds: number[],
-  }
+    userSkillIds: number[];
+  };
 }
 
 /* Skills */
 export interface CreateSkillsRequest extends AuthenticatedRequest {
   body: {
-    skills: string[]
-  }
+    skills: string[];
+  };
+}
+
+export interface SearchSkillsRequest extends AuthenticatedRequest {
+  query: {
+    name?: string;
+    limit?: string;
+    offset?: string;
+  };
 }
