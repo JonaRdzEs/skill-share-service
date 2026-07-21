@@ -3,6 +3,7 @@ import {
   AuthenticatedRequest,
   GetUserRequest,
   HTTPStatusCode,
+  GetUsersRequest,
 } from "../../types";
 import { UserService } from "../../services/User.service";
 
@@ -12,6 +13,28 @@ export class UserController {
   constructor() {
     this.userService = new UserService();
   }
+
+  getTopRatedTeachers = async (req: Request, res: Response) => {
+    const { query, user } = req as GetUsersRequest;
+
+    const page = isNaN(parseInt(query.page ?? "")) ? 1 : parseInt(query.page!, 10);
+    const take = isNaN(parseInt(query.take ?? "")) ? 10 : parseInt(query.take!, 10);
+
+    const { users, ...rest } = await this.userService.getTopRatedByRole({
+      role: "teacher",
+      requesterId: user.id,
+      queryParams: {
+        ...(query.name && { name: query.name }),
+        page,
+        take,
+      }
+    });
+
+    res.status(HTTPStatusCode.success).send({
+      teachers: users,
+      ...rest, 
+    })
+  };
 
   getUser = async (req: Request, res: Response) => {
     const typedRequest = req as GetUserRequest;

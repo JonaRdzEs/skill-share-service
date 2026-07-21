@@ -57,6 +57,14 @@ export interface DeleteUserSkillsRequest extends AuthenticatedRequest {
   };
 }
 
+export interface GetUsersRequest extends AuthenticatedRequest {
+  query: {
+    name?: string;
+    page?: string;
+    take?: string;
+  }
+}
+
 /* Skills */
 export interface CreateSkillsRequest extends AuthenticatedRequest {
   body: {

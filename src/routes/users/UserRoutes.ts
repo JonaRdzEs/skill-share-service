@@ -14,6 +14,7 @@ export class UserRoutes {
     const userController = new UserController();
     const userSkillsController = new UserSkillsController();
 
+    this.router.get("/teachers/top-rated", validateJwt, userController.getTopRatedTeachers);
     this.router.get("/:id", validateJwt, userController.getUser);
     this.router.put("/me", validateJwt, bodyValidator(updateUserSchema), userController.update);
 

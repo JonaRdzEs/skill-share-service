@@ -1,10 +1,66 @@
+import { UsersWhereInput } from "../../generated/prisma/models";
 import { prisma } from "../../lib/prisma";
-import { CreateUserData, UpdateUserData } from "../../types";
+import { CreateUserData, GetUsersParams, UpdateUserData } from "../../types";
 
 export class UserModel {
   async exists(key: string, value: string) {
     const user = await prisma.users.findFirst({ where: { [key]: value } });
     return !!user;
+  }
+
+  async getTopRatedByRole({
+    role,
+    requesterId,
+    queryParams = {},
+  }: GetUsersParams) {
+    const { name, page = 1, take = 10 } = queryParams;
+
+    const where = {
+      role,
+      AND: {
+        id: {
+          not: requesterId,
+        },
+        ...(name && {
+          username: {
+            mode: "insensitive",
+            contains: name,
+          },
+        }),
+      },
+    } satisfies UsersWhereInput;
+
+    const [count, users] = await Promise.all([
+      prisma.users.count({ where }),
+      prisma.users.findMany({
+        where,
+        take,
+        skip: (page - 1) * take,
+        select: {
+          id: true,
+          photo: true,
+          username: true,
+          bio: true,
+          user_skills: {
+            select: {
+              skill: {
+                select: {
+                  name: true,
+                },
+              },
+            },
+          },
+        },
+      }),
+    ]);
+
+    const totalPages = Math.ceil(count / take);
+
+    return {
+      users,
+      totalPages,
+      totalCount: count,
+    };
   }
 
   findOneByEmail(email: string) {
@@ -24,7 +80,7 @@ export class UserModel {
       data,
       where: {
         id,
-      }
+      },
     });
-  } 
+  }
 }

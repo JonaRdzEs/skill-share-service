@@ -1,6 +1,6 @@
 import { HTTPError } from "../helpers/HTTPError";
 import { UserModel } from "../models/users/User.model";
-import { CreateUserData, HTTPErrorCode, HTTPStatusCode, UpdateUserData } from "../types";
+import { CreateUserData, GetUsersParams, HTTPErrorCode, HTTPStatusCode, UpdateUserData } from "../types";
 
 export class UserService {
   private userModel;
@@ -11,6 +11,23 @@ export class UserService {
   
   emailExists = async (email: string) => this.userModel.exists("email", email);
   
+  getTopRatedByRole = async (params: GetUsersParams) => {
+    const { users, totalCount, totalPages } = await this.userModel.getTopRatedByRole(params);
+
+    const formattedUsers = users.map(({ photo, user_skills, username,...rest }) => ({
+      ...rest,
+      name: username,
+      photoUrl: photo,
+      skills: user_skills.map((userSkill) => (userSkill.skill.name)),
+    }));
+
+    return {
+      users: formattedUsers,
+      totalCount,
+      totalPages,
+    }
+  };
+
   findById = async (id: string) => {
     const user = await this.userModel.findById(id);
     if(!user) {

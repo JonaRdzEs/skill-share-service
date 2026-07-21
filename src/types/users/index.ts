@@ -14,3 +14,14 @@ export interface UpdateUserData {
   photo?: string;
   role?: "student" | "teacher",
 }
+
+
+export interface GetUsersParams {
+   role: "student" | "teacher", 
+   requesterId: string, 
+   queryParams?: {
+      name?: string;
+      page?: number;
+      take?: number;
+   }
+}
