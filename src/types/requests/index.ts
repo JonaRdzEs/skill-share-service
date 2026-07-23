@@ -36,7 +36,7 @@ export type AuthenticatedRequestWithParams<T> = RequestWithParams<T> &
 
 /* Users */
 
-export type GetUserRequest = AuthenticatedRequestWithParams<{ id: string }>;
+export type GetUserRequest = AuthenticatedRequestWithParams<{ id: string }> & { query: { role?: string }};
 export type GetUserSkillsRequest = AuthenticatedRequestWithParams<{
   id: string;
 }>;

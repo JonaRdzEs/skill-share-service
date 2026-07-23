@@ -1,6 +1,11 @@
 import { UsersWhereInput } from "../../generated/prisma/models";
 import { prisma } from "../../lib/prisma";
-import { CreateUserData, GetUsersParams, UpdateUserData } from "../../types";
+import {
+  CreateUserData,
+  GetUserParams,
+  GetUsersParams,
+  UpdateUserData,
+} from "../../types";
 
 export class UserModel {
   async exists(key: string, value: string) {
@@ -67,8 +72,44 @@ export class UserModel {
     return prisma.users.findUnique({ where: { email } });
   }
 
-  findById(id: string) {
-    return prisma.users.findUnique({ where: { id } });
+  findById(id: string, role?: "student" | "teacher") {
+    return prisma.users.findUnique({
+      where: {
+        id,
+        ...(role && {
+          AND: {
+            role,
+          },
+        }),
+      },
+    });
+  }
+
+  findTeacherById({ id, include }: GetUserParams) {
+    const {
+      userSkills = false,
+      reviewTarget = false,
+      reviewAuthor = false,
+    } = include ?? {};
+    return prisma.users.findUnique({
+      where: {
+        id,
+          AND: {
+            role: "teacher",
+          },
+      },
+      include: {
+        review_author: reviewAuthor,
+        review_target: reviewTarget,
+        ...(userSkills && {
+          user_skills: {
+            include: {
+              skill: true,
+            },
+          },
+        }),
+      },
+    });
   }
 
   create(data: CreateUserData) {
