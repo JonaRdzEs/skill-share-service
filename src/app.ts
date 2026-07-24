@@ -11,13 +11,13 @@ const appRoutes = new AppRoutes();
 
 const corsOptions = {
   origin: envs.environment === "development" ? ["http://localhost:3000"] : ["https://skill-share-murex.vercel.app"],
-  methods: ["GET", "POST", "PUT"],
+  methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type"],
   credentials: true,
 }
 
 app.use(express.json());
-app.use(cors(corsOptions))
+app.use(cors(corsOptions));
 app.use(cookieParser());
 
 app.use("/", appRoutes.routes);

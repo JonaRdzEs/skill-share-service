@@ -1,6 +1,7 @@
 export * from "./auth";
 
 export * from "./users";
+export * from "./skills";
 
 export * from "./HTTPStatusCode";
 export * from "./ErrorCode";

@@ -23,6 +23,7 @@ model Users {
   bio      String? @db.VarChar(250)
   location String?
   photo    String?
+  role     UserRole @default(student)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -109,4 +110,9 @@ enum SessionStatus {
   REJECTED
   COMPLETED
   CANCELLED
+}
+
+enum UserRole {
+  teacher
+  student
 }
