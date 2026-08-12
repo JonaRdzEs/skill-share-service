@@ -75,8 +75,8 @@ model Sessions {
   guest    Users  @relation("guest", fields: [guest_id], references: [id])
   guest_id String
 
-  skill    Skills @relation(fields: [skill_id], references: [id])
-  skill_id Int
+  skill    Skills? @relation(fields: [skill_id], references: [id])
+  skill_id Int?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -110,6 +110,7 @@ enum SessionStatus {
   REJECTED
   COMPLETED
   CANCELLED
+  EXPIRED
 }
 
 enum UserRole {
