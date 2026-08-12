@@ -1,6 +1,7 @@
 import type { Request } from "express";
 import type { LoginData, SignUpData } from "../auth";
 import { UpdateUserData } from "../users";
+import { CreateSessionBody } from "../sessions";
 
 /* General */
 export interface RequestWithParams<T> {
@@ -78,4 +79,10 @@ export interface SearchSkillsRequest extends AuthenticatedRequest {
     limit?: string;
     offset?: string;
   };
+}
+
+/* Sessions */
+
+export interface CreateSessionRequest extends AuthenticatedRequest {
+  body: CreateSessionBody,
 }
