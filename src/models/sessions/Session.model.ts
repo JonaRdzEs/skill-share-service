@@ -8,7 +8,7 @@ export class SessionModel {
       data: {
         host_id: hostId,
         guest_id: guestId,
-        skill_id: skillId,
+        ...(skillId && { skill_id: skillId }),
         ...rest,
       },
     });

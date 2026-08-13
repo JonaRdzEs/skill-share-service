@@ -20,7 +20,10 @@ export class SessionService {
   };
 
   create = async (hostId: string, data: CreateSessionBody) => {
-    const teacher = await this.userModel.findTeacherById({ id: data.guestId, include: { userSkills: true } });
+    const teacher = await this.userModel.findTeacherById({
+      id: data.guestId,
+      include: { userSkills: true },
+    });
 
     if (!teacher) {
       throw new HTTPError(
@@ -40,16 +43,18 @@ export class SessionService {
       );
     }
 
-    const teacherRequestedSkill = user_skills.find(
-      (userSkill) => userSkill.skill_id === data.skillId
-    );
-
-    if (!teacherRequestedSkill) {
-      throw new HTTPError(
-        HTTPStatusCode.badRequest,
-        "The skill is not associated with that teacher",
-        HTTPErrorCode.badRequest
+    if (data.skillId) {
+      const teacherRequestedSkill = user_skills.find(
+        (userSkill) => userSkill.skill_id === data.skillId
       );
+
+      if (!teacherRequestedSkill) {
+        throw new HTTPError(
+          HTTPStatusCode.badRequest,
+          "The skill is not associated with that teacher",
+          HTTPErrorCode.badRequest
+        );
+      }
     }
 
     const scheduledTime = new Date(data.scheduledAt);
@@ -74,7 +79,7 @@ export class SessionService {
       hostId,
       ...data,
     });
-    
+
     return session;
   };
 }

@@ -4,5 +4,5 @@ export interface CreateSessionBody {
   location: string;
   message?: string;
   guestId: string;
-  skillId: number;
+  skillId?: number;
 }
