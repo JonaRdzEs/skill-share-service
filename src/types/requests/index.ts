@@ -86,3 +86,10 @@ export interface SearchSkillsRequest extends AuthenticatedRequest {
 export interface CreateSessionRequest extends AuthenticatedRequest {
   body: CreateSessionBody,
 }
+
+export interface GetUserSessionsRequest extends AuthenticatedRequest {
+  query: {
+    page?: string;
+    take?: string;
+  }
+}
