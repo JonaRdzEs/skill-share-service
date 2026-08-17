@@ -13,6 +13,19 @@ export class UserModel {
     return !!user;
   }
 
+  async isTeacher(userId: string) {
+    const user = await prisma.users.findUnique({
+      where: {
+        id: userId,
+      },
+      select: {
+        role: true,
+      }
+    });
+
+    return user?.role === "teacher";
+  }
+
   async getTopRatedByRole({
     role,
     requesterId,
